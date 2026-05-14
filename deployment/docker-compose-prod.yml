@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: msp-assistant-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - HOST=0.0.0.0
+      - PORT=8000
+      - AWS_REGION=us-east-1
+      - AWS_PROFILE=default
+      - DYNAMODB_TABLE_COSTS=msp-costs
+      - DYNAMODB_TABLE_ALERTS=msp-alerts
+      - DYNAMODB_TABLE_USERS=msp-users
+      - DYNAMODB_TABLE_CHAT=msp-chat
+      - S3_BUCKET=msp-assistant-data
+      - BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20241022-v2:0
+      - BEDROCK_REGION=us-east-1
+      - DATABASE_URL=sqlite:///./msp_assistant.db
+      - TEAMS_WEBHOOK_URL=${TEAMS_WEBHOOK_URL}
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - CORS_ORIGINS=https://msp-assistant.example.com,https://www.msp-assistant.example.com
+    volumes:
+      - ~/.aws/credentials:/home/appuser/.aws/credentials:ro
+      - logs:/app/logs
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/msp-assistant-backend
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  logs:
+    driver: local
+
+networks:
+  default:
+    name: msp-assistant-network
+    driver: bridge

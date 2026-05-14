@@ -1,0 +1,121 @@
+{
+  "family": "msp-assistant-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "msp-assistant-backend",
+      "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/msp-assistant-backend:latest",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "DEBUG",
+          "value": "false"
+        },
+        {
+          "name": "HOST",
+          "value": "0.0.0.0"
+        },
+        {
+          "name": "PORT",
+          "value": "8000"
+        },
+        {
+          "name": "AWS_REGION",
+          "value": "us-east-1"
+        },
+        {
+          "name": "DYNAMODB_TABLE_COSTS",
+          "value": "msp-costs"
+        },
+        {
+          "name": "DYNAMODB_TABLE_ALERTS",
+          "value": "msp-alerts"
+        },
+        {
+          "name": "DYNAMODB_TABLE_USERS",
+          "value": "msp-users"
+        },
+        {
+          "name": "DYNAMODB_TABLE_CHAT",
+          "value": "msp-chat"
+        },
+        {
+          "name": "S3_BUCKET",
+          "value": "msp-assistant-data"
+        },
+        {
+          "name": "BEDROCK_MODEL_ID",
+          "value": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+        },
+        {
+          "name": "BEDROCK_REGION",
+          "value": "us-east-1"
+        },
+        {
+          "name": "DATABASE_URL",
+          "value": "sqlite:///./msp_assistant.db"
+        },
+        {
+          "name": "CORS_ORIGINS",
+          "value": "https://msp-assistant.example.com,https://www.msp-assistant.example.com"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "SECRET_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:msp-assistant/secret-key"
+        },
+        {
+          "name": "TEAMS_WEBHOOK_URL",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:msp-assistant/teams-webhook"
+        },
+        {
+          "name": "SLACK_WEBHOOK_URL",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:msp-assistant/slack-webhook"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/msp-assistant-backend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8000/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ],
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/msp-assistant-task-role",
+  "tags": [
+    {
+      "key": "Application",
+      "value": "MSP-Assistant"
+    },
+    {
+      "key": "Environment",
+      "value": "Production"
+    }
+  ]
+}
