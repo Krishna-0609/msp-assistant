@@ -116,7 +116,7 @@ check_prerequisites() {
         exit 1
     fi
 
-    write_status "All prerequisites met" "SUCCESS"
+    write_status "All prerequisites met" "SUCCESS "
 }
 
 # Setup ECR
