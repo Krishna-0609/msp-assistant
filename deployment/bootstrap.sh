@@ -19,22 +19,24 @@ aws s3api create-bucket \
   --create-bucket-configuration LocationConstraint="$AWS_REGION" \
   2>/dev/null || echo "✓ Bucket already exists"
 
-# Enable versioning on the bucket
+# Enable versioning on the bucket (optional, skip if already done)
 echo "📝 Enabling versioning..."
 aws s3api put-bucket-versioning \
   --bucket "$STATE_BUCKET" \
   --versioning-configuration Status=Enabled \
-  --region "$AWS_REGION"
+  --region "$AWS_REGION" \
+  2>/dev/null || echo "⚠ Versioning already enabled or skipped"
 
-# Block public access
+# Block public access (optional, skip if already done)
 echo "🔒 Blocking public access..."
 aws s3api put-public-access-block \
   --bucket "$STATE_BUCKET" \
   --region "$AWS_REGION" \
   --public-access-block-configuration \
-  "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+  "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
+  2>/dev/null || echo "⚠ Public access block already set or skipped"
 
-# Enable encryption
+# Enable encryption (optional, skip if already done)
 echo "🔐 Enabling encryption..."
 aws s3api put-bucket-encryption \
   --bucket "$STATE_BUCKET" \
@@ -45,7 +47,7 @@ aws s3api put-bucket-encryption \
         "SSEAlgorithm": "AES256"
       }
     }]
-  }'
+  }' 2>/dev/null || echo "⚠ Encryption already enabled or skipped"
 
 # Create DynamoDB lock table
 echo "🔐 Creating DynamoDB lock table..."

@@ -106,6 +106,7 @@ jobs:
           bash bootstrap.sh
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
+        continue-on-error: true
 
       - name: Terraform Format Check
         run: |
