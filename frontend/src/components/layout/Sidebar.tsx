@@ -8,7 +8,7 @@ interface SidebarItem {
   badge?: number;
 }
 
-interface SidebarProps {
+export interface SidebarProps {
   items: SidebarItem[];
   isOpen?: boolean;
   onClose?: () => void;

@@ -6,9 +6,9 @@ interface CostCardProps {
   service: string;
   amount: number;
   currency?: string;
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: 'up' | 'down' | 'neutral' | string;
   trendPercent?: number;
-  status?: 'low' | 'medium' | 'high';
+  status?: 'low' | 'medium' | 'high' | string;
   badge?: string;
 }
 

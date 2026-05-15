@@ -1,5 +1,4 @@
 import { apiClient } from './api';
-import type { ApiResponse } from '../types/api';
 
 interface TokenResponse {
   access_token: string;
@@ -38,7 +37,7 @@ export const authService = {
     // Store tokens
     localStorage.setItem('access_token', response.data.access_token);
     localStorage.setItem('refresh_token', response.data.refresh_token);
-    localStorage.setItem('token_expiry', Date.now() + response.data.expires_in * 1000);
+    localStorage.setItem('token_expiry', String(Date.now() + response.data.expires_in * 1000));
 
     return response.data;
   },
@@ -57,7 +56,6 @@ export const authService = {
   },
 
   async getCurrentUser(): Promise<UserInfo> {
-    const token = localStorage.getItem('access_token');
     const response = await apiClient.get<UserInfo>('/auth/me');
 
     if (!response.success || !response.data) {
@@ -81,7 +79,7 @@ export const authService = {
   isTokenExpired(): boolean {
     const expiry = localStorage.getItem('token_expiry');
     if (!expiry) return true;
-    return Date.now() > parseInt(expiry);
+    return Date.now() > parseInt(expiry, 10);
   },
 
   async refreshToken(): Promise<TokenResponse> {
@@ -99,7 +97,7 @@ export const authService = {
     }
 
     localStorage.setItem('access_token', response.data.access_token);
-    localStorage.setItem('token_expiry', Date.now() + response.data.expires_in * 1000);
+    localStorage.setItem('token_expiry', String(Date.now() + response.data.expires_in * 1000));
 
     return response.data;
   },

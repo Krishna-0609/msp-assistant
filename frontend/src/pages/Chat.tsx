@@ -3,7 +3,6 @@ import { Card, CardHeader, CardBody } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { ChatWindow } from '../components/chat/ChatWindow';
-import { Badge } from '../components/common/Badge';
 import type { ChatMessage } from '../types/models';
 
 const Chat = () => {

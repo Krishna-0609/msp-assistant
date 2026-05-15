@@ -15,7 +15,7 @@ interface DataTableProps<T> {
 }
 
 export const DataTable = React.forwardRef<HTMLDivElement, DataTableProps<any>>(
-  ({ columns, data, loading, onRowClick }, ref) => {
+  ({ columns, data, onRowClick }, ref) => {
     return (
       <Card ref={ref} variant="default" className="w-full overflow-x-auto">
         <table className="w-full">

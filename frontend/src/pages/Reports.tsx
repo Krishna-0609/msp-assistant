@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Card, CardHeader, CardBody } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
@@ -47,7 +47,7 @@ const Reports = () => {
       </div>
 
       {/* Generate New Report */}
-      <Card variant="primary" className="bg-gradient-to-r from-primary-500 to-primary-600 border-0 animate-slideInUp animate-stagger-1">
+      <Card variant="default" className="bg-gradient-to-r from-primary-500 to-primary-600 border-0 animate-slideInUp animate-stagger-1">
         <CardBody className="text-white">
           <div className="flex items-center justify-between">
             <div>

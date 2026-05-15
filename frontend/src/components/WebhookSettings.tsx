@@ -2,13 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AlertCircle, CheckCircle, Copy, Eye, EyeOff, ExternalLink } from 'lucide-react';
 
-interface WebhookConfig {
-  webhook_type: string;
-  webhook_url: string;
-  enabled: boolean;
-  configured: boolean;
-}
-
 interface WebhookSettingsProps {
   onClose?: () => void;
 }

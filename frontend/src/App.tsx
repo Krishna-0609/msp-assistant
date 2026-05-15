@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, useThemeContext } from './context/ThemeContext';
 import { AuthProvider, useAuthContext } from './context/AuthContext';
@@ -19,8 +18,7 @@ import './styles/utilities.css';
 
 const AppContent = () => {
   const { isDark, toggleTheme } = useThemeContext();
-  const { isAuthenticated, user, logout } = useAuthContext();
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const { isAuthenticated, user } = useAuthContext();
 
   const sidebarItems = [
     {
@@ -75,10 +73,6 @@ const AppContent = () => {
       active: window.location.pathname === '/admin',
     },
   ];
-
-  const handleLogout = () => {
-    logout();
-  };
 
   return (
     <Router>

@@ -13,14 +13,6 @@ interface ChatResponse {
   response: ChatMessage;
 }
 
-interface Conversation {
-  id: string;
-  title?: string;
-  created_at: string;
-  updated_at: string;
-  message_count: number;
-}
-
 interface ConversationDetail {
   id: string;
   messages: ChatMessage[];
@@ -68,7 +60,7 @@ export const chatService = {
     }
   },
 
-  async startNewConversation(accountId: string): Promise<string> {
+  async startNewConversation(_accountId: string): Promise<string> {
     // Generate a new conversation ID
     return `conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   },

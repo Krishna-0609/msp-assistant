@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardBody, CardHeader } from '../components/common/Card';
 import { Badge } from '../components/common/Badge';
 import { Alert } from '../components/common/Alert';
@@ -7,7 +6,6 @@ import { CostCard } from '../components/dashboard/CostCard';
 import { ConfidenceBar } from '../components/dashboard/ConfidenceBar';
 
 const Dashboard = () => {
-  const [notificationCount, setNotificationCount] = React.useState(3);
 
   const costData = [
     { service: 'EC2', amount: 2450.50, trend: 'up' as const, trendPercent: 12, status: 'high' },

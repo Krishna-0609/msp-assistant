@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '../common/Button';
 
-interface HeaderProps {
+export interface HeaderProps {
   onThemeToggle?: () => void;
   isDark?: boolean;
   notificationCount?: number;
