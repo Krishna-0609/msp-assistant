@@ -100,6 +100,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Bootstrap Terraform backend
+        run: |
+          cd deployment
+          bash bootstrap.sh
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+
       - name: Terraform Format Check
         run: |
           cd deployment/terraform
