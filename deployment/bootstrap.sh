@@ -59,6 +59,12 @@ aws dynamodb create-table \
   --region "$AWS_REGION" \
   2>/dev/null || echo "✓ Table already exists"
 
+# Verify bucket is accessible
+echo "🔍 Verifying S3 bucket access..."
+aws s3api head-bucket --bucket "$STATE_BUCKET" --region "$AWS_REGION" 2>/dev/null && \
+  echo "✓ S3 bucket is accessible" || \
+  echo "⚠ Warning: Could not verify S3 bucket access"
+
 echo "✅ Bootstrap complete! Terraform state backend is ready."
 echo "📋 Bucket: $STATE_BUCKET"
 echo "📋 Lock Table: $LOCK_TABLE"
