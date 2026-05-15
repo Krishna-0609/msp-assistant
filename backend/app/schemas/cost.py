@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List
 
+
 class CostItem(BaseModel):
     service: str
     amount: float = Field(..., gt=0)
@@ -9,6 +10,7 @@ class CostItem(BaseModel):
     date: datetime
     account_id: str
     region: Optional[str] = None
+
 
 class CostResponse(BaseModel):
     id: str
@@ -24,6 +26,7 @@ class CostResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class CostSummary(BaseModel):
     total_cost: float
     highest_cost_service: str
@@ -32,6 +35,7 @@ class CostSummary(BaseModel):
     services_count: int
     period_start: datetime
     period_end: datetime
+
 
 class CostFilterRequest(BaseModel):
     account_id: Optional[str] = None

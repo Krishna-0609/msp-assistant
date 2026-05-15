@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
+
 class Report(BaseModel):
     id: str
     name: str
@@ -14,18 +15,41 @@ class Report(BaseModel):
     pages: int
     status: str
 
+
 # Mock data
 REPORTS = [
-    {"id": "1", "name": "Monthly Cost Report", "type": "cost", "period": "May 2026", "generated_at": "2026-05-14", "pages": 12, "status": "ready"},
-    {"id": "2", "name": "Security Findings", "type": "security", "period": "May 2026", "generated_at": "2026-05-13", "pages": 8, "status": "ready"},
-    {"id": "3", "name": "Performance Analysis", "type": "performance", "period": "May 2026", "generated_at": "2026-05-10", "pages": 15, "status": "ready"},
+    {
+        "id": "1",
+        "name": "Monthly Cost Report",
+        "type": "cost",
+        "period": "May 2026",
+        "generated_at": "2026-05-14",
+        "pages": 12,
+        "status": "ready",
+    },
+    {
+        "id": "2",
+        "name": "Security Findings",
+        "type": "security",
+        "period": "May 2026",
+        "generated_at": "2026-05-13",
+        "pages": 8,
+        "status": "ready",
+    },
+    {
+        "id": "3",
+        "name": "Performance Analysis",
+        "type": "performance",
+        "period": "May 2026",
+        "generated_at": "2026-05-10",
+        "pages": 15,
+        "status": "ready",
+    },
 ]
 
+
 @router.get("/", response_model=List[Report])
-async def get_reports(
-    report_type: str = Query(None),
-    limit: int = Query(20, le=100)
-):
+async def get_reports(report_type: str = Query(None), limit: int = Query(20, le=100)):
     """Get generated reports"""
     results = REPORTS
 
@@ -34,6 +58,7 @@ async def get_reports(
 
     return results[:limit]
 
+
 @router.get("/{report_id}", response_model=Report)
 async def get_report(report_id: str):
     """Get specific report"""
@@ -41,11 +66,11 @@ async def get_report(report_id: str):
 
     if not report:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Report not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Report not found"
         )
 
     return report
+
 
 @router.post("/generate")
 async def generate_report(report_type: str = Query(...)):
@@ -57,11 +82,12 @@ async def generate_report(report_type: str = Query(...)):
         "period": "May 2026",
         "generated_at": datetime.now().isoformat(),
         "pages": 10,
-        "status": "ready"
+        "status": "ready",
     }
 
     REPORTS.append(new_report)
     return new_report
+
 
 @router.get("/{report_id}/download")
 async def download_report(report_id: str):
@@ -70,11 +96,10 @@ async def download_report(report_id: str):
 
     if not report:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Report not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Report not found"
         )
 
     return {
         "download_url": f"/reports/{report_id}.pdf",
-        "filename": f"{report['name']}.pdf"
+        "filename": f"{report['name']}.pdf",
     }

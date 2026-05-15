@@ -1,4 +1,5 @@
 """AWS Bedrock integration for Claude AI"""
+
 import json
 import logging
 from typing import List, Optional
@@ -6,10 +7,9 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
+
 async def get_bedrock_response(
-    message: str,
-    account_id: str,
-    context: List = None
+    message: str, account_id: str, context: List = None
 ) -> str:
     """
     Get response from Claude 3.5 Sonnet via AWS Bedrock.

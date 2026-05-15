@@ -3,17 +3,20 @@ from datetime import datetime
 from typing import Optional
 from enum import Enum
 
+
 class AlertType(str, Enum):
     VULNERABILITY = "vulnerability"
     COST_SPIKE = "cost_spike"
     PERFORMANCE = "performance"
     COMPLIANCE = "compliance"
 
+
 class SeverityLevel(str, Enum):
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
+
 
 class AlertCreate(BaseModel):
     type: AlertType
@@ -22,6 +25,7 @@ class AlertCreate(BaseModel):
     service: Optional[str] = None
     account_id: str
     metadata: Optional[dict] = None
+
 
 class AlertResponse(BaseModel):
     id: str
@@ -37,8 +41,10 @@ class AlertResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class AlertUpdate(BaseModel):
     read: bool = True
+
 
 class AlertFilter(BaseModel):
     account_id: Optional[str] = None

@@ -11,6 +11,7 @@ from app.core.logging import setup_logging
 setup_logging()
 logger = logging.getLogger(__name__)
 
+
 # Lifespan context manager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -18,12 +19,13 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("Shutting down MSP Assistant Backend")
 
+
 # Create FastAPI app
 app = FastAPI(
     title="MSP Assistant API",
     description="AWS Cost Intelligence Platform API",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
@@ -48,14 +50,12 @@ app.include_router(webhooks.router, prefix="/api", tags=["webhooks"])
 app.include_router(youtrack.router, tags=["youtrack"])
 app.include_router(settings_api.router, tags=["settings"])
 
+
 # Health check
 @app.get("/health")
 async def health_check():
-    return {
-        "status": "healthy",
-        "service": "MSP Assistant API",
-        "version": "1.0.0"
-    }
+    return {"status": "healthy", "service": "MSP Assistant API", "version": "1.0.0"}
+
 
 # Root endpoint
 @app.get("/")
@@ -63,14 +63,13 @@ async def root():
     return {
         "message": "Welcome to MSP Assistant API",
         "docs": "/docs",
-        "redoc": "/redoc"
+        "redoc": "/redoc",
     }
+
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
-        "app.main:app",
-        host=settings.HOST,
-        port=settings.PORT,
-        reload=settings.DEBUG
+        "app.main:app", host=settings.HOST, port=settings.PORT, reload=settings.DEBUG
     )

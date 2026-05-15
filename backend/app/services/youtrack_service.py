@@ -133,7 +133,9 @@ class YouTrackService:
                     }
                 else:
                     error_msg = response.text
-                    logger.error(f"Failed to create issue: {response.status_code} - {error_msg}")
+                    logger.error(
+                        f"Failed to create issue: {response.status_code} - {error_msg}"
+                    )
                     return {
                         "success": False,
                         "error": f"Failed to create issue: {response.status_code}",
@@ -274,9 +276,7 @@ class YouTrackService:
             logger.error(f"Exception updating YouTrack issue: {str(e)}")
             return {"success": False, "error": str(e)}
 
-    async def add_comment(
-        self, issue_id: str, comment: str
-    ) -> Dict[str, Any]:
+    async def add_comment(self, issue_id: str, comment: str) -> Dict[str, Any]:
         """Add a comment to an issue."""
         if not await self.is_configured():
             return {"success": False, "error": "YouTrack not configured"}
@@ -301,9 +301,7 @@ class YouTrackService:
             logger.error(f"Exception adding comment to YouTrack issue: {str(e)}")
             return {"success": False, "error": str(e)}
 
-    async def search_issues(
-        self, query: str, limit: int = 10
-    ) -> Dict[str, Any]:
+    async def search_issues(self, query: str, limit: int = 10) -> Dict[str, Any]:
         """Search for issues in YouTrack."""
         if not await self.is_configured():
             return {"success": False, "error": "YouTrack not configured", "issues": []}

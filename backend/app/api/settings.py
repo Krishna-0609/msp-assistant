@@ -19,6 +19,7 @@ _settings = {
 
 class WebhookConfigRequest(BaseModel):
     """Request model for webhook configuration."""
+
     webhook_type: str  # "teams" or "slack"
     webhook_url: str
     enabled: bool = True
@@ -26,6 +27,7 @@ class WebhookConfigRequest(BaseModel):
 
 class WebhookConfigResponse(BaseModel):
     """Response model for webhook configuration."""
+
     webhook_type: str
     webhook_url: str  # Masked for security
     enabled: bool
@@ -34,11 +36,13 @@ class WebhookConfigResponse(BaseModel):
 
 class TestWebhookRequest(BaseModel):
     """Request model for testing webhook."""
+
     webhook_type: str  # "teams" or "slack"
 
 
 class AllSettingsResponse(BaseModel):
     """Response model for all settings."""
+
     teams_webhook: Optional[WebhookConfigResponse] = None
     slack_webhook: Optional[WebhookConfigResponse] = None
 
@@ -69,18 +73,26 @@ async def get_webhook_settings(current_user: str = Depends(get_current_user)):
     slack_configured = bool(slack_url) and slack_url != "PLACEHOLDER"
 
     return AllSettingsResponse(
-        teams_webhook=WebhookConfigResponse(
-            webhook_type="teams",
-            webhook_url=mask_webhook_url(teams_url),
-            enabled=teams_configured,
-            configured=teams_configured,
-        ) if teams_configured else None,
-        slack_webhook=WebhookConfigResponse(
-            webhook_type="slack",
-            webhook_url=mask_webhook_url(slack_url),
-            enabled=slack_configured,
-            configured=slack_configured,
-        ) if slack_configured else None,
+        teams_webhook=(
+            WebhookConfigResponse(
+                webhook_type="teams",
+                webhook_url=mask_webhook_url(teams_url),
+                enabled=teams_configured,
+                configured=teams_configured,
+            )
+            if teams_configured
+            else None
+        ),
+        slack_webhook=(
+            WebhookConfigResponse(
+                webhook_type="slack",
+                webhook_url=mask_webhook_url(slack_url),
+                enabled=slack_configured,
+                configured=slack_configured,
+            )
+            if slack_configured
+            else None
+        ),
     )
 
 
@@ -93,15 +105,13 @@ async def configure_webhook(
     # Validate webhook type
     if request.webhook_type.lower() not in ["teams", "slack"]:
         raise HTTPException(
-            status_code=400,
-            detail="webhook_type must be 'teams' or 'slack'"
+            status_code=400, detail="webhook_type must be 'teams' or 'slack'"
         )
 
     # Validate URL
     if request.enabled and not validate_webhook_url(request.webhook_url):
         raise HTTPException(
-            status_code=400,
-            detail="Invalid webhook URL. Must start with https://"
+            status_code=400, detail="Invalid webhook URL. Must start with https://"
         )
 
     # Store webhook URL
@@ -117,7 +127,7 @@ async def configure_webhook(
         "success": True,
         "webhook_type": request.webhook_type,
         "configured": request.enabled,
-        "message": f"{request.webhook_type.capitalize()} webhook {'configured' if request.enabled else 'disabled'}"
+        "message": f"{request.webhook_type.capitalize()} webhook {'configured' if request.enabled else 'disabled'}",
     }
 
 
@@ -129,8 +139,7 @@ async def get_webhook_config(
     """Get specific webhook configuration."""
     if webhook_type.lower() not in ["teams", "slack"]:
         raise HTTPException(
-            status_code=400,
-            detail="webhook_type must be 'teams' or 'slack'"
+            status_code=400, detail="webhook_type must be 'teams' or 'slack'"
         )
 
     key = f"{webhook_type.lower()}_webhook_url"
@@ -153,8 +162,7 @@ async def test_webhook_config(
     """Test webhook configuration."""
     if request.webhook_type.lower() not in ["teams", "slack"]:
         raise HTTPException(
-            status_code=400,
-            detail="webhook_type must be 'teams' or 'slack'"
+            status_code=400, detail="webhook_type must be 'teams' or 'slack'"
         )
 
     key = f"{request.webhook_type.lower()}_webhook_url"
@@ -175,14 +183,16 @@ async def test_webhook_config(
             payload = {
                 "summary": "Test Message",
                 "themeColor": "0078D4",
-                "sections": [{
-                    "activityTitle": "MSP Assistant Test",
-                    "text": "This is a test notification from MSP Assistant",
-                    "facts": [
-                        {"name": "Status", "value": "✅ Working"},
-                        {"name": "Timestamp", "value": "Now"},
-                    ]
-                }]
+                "sections": [
+                    {
+                        "activityTitle": "MSP Assistant Test",
+                        "text": "This is a test notification from MSP Assistant",
+                        "facts": [
+                            {"name": "Status", "value": "✅ Working"},
+                            {"name": "Timestamp", "value": "Now"},
+                        ],
+                    }
+                ],
             }
         else:  # Slack
             payload = {
@@ -192,17 +202,17 @@ async def test_webhook_config(
                         "type": "header",
                         "text": {
                             "type": "plain_text",
-                            "text": "MSP Assistant Test Notification"
-                        }
+                            "text": "MSP Assistant Test Notification",
+                        },
                     },
                     {
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "✅ *Test Successful*\nWebhook is working correctly!"
-                        }
-                    }
-                ]
+                            "text": "✅ *Test Successful*\nWebhook is working correctly!",
+                        },
+                    },
+                ],
             }
 
         async with httpx.AsyncClient(timeout=10) as client:
@@ -253,8 +263,8 @@ async def get_webhook_docs():
                     "Optionally upload an image",
                     "Click 'Create'",
                     "Copy the webhook URL",
-                    "Paste it here"
-                ]
+                    "Paste it here",
+                ],
             },
             "slack": {
                 "name": "Slack",
@@ -270,15 +280,15 @@ async def get_webhook_docs():
                     "Click 'Add New Webhook to Workspace'",
                     "Select channel and authorize",
                     "Copy the webhook URL",
-                    "Paste it here"
-                ]
-            }
+                    "Paste it here",
+                ],
+            },
         },
         "features": {
             "auto_alerts": "Automatically send alerts as notifications",
             "test_message": "Test webhook before using",
             "multiple_webhooks": "Configure both Teams and Slack",
             "masked_urls": "URLs are masked for security",
-            "no_secrets_needed": "Configure directly in app, no GitHub secrets needed"
-        }
+            "no_secrets_needed": "Configure directly in app, no GitHub secrets needed",
+        },
     }

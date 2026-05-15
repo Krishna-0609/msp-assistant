@@ -18,7 +18,7 @@ ALERTS_DATA = [
         "account_id": "123456789012",
         "timestamp": datetime.now(),
         "read": False,
-        "metadata": {"instance_id": "i-1234567890abcdef0"}
+        "metadata": {"instance_id": "i-1234567890abcdef0"},
     },
     {
         "id": "2",
@@ -29,7 +29,7 @@ ALERTS_DATA = [
         "account_id": "123456789012",
         "timestamp": datetime.now(),
         "read": False,
-        "metadata": {"threshold": 15, "current": 12}
+        "metadata": {"threshold": 15, "current": 12},
     },
     {
         "id": "3",
@@ -40,9 +40,10 @@ ALERTS_DATA = [
         "account_id": "123456789012",
         "timestamp": datetime.now(),
         "read": True,
-        "metadata": {"latency_ms": 250}
+        "metadata": {"latency_ms": 250},
     },
 ]
+
 
 @router.get("/", response_model=List[AlertResponse])
 async def get_alerts(
@@ -50,7 +51,7 @@ async def get_alerts(
     severity: str = Query(None),
     read: bool = Query(None),
     limit: int = Query(50, le=500),
-    offset: int = Query(0, ge=0)
+    offset: int = Query(0, ge=0),
 ):
     """Get alerts with optional filters"""
     results = ALERTS_DATA
@@ -64,7 +65,8 @@ async def get_alerts(
     if read is not None:
         results = [a for a in results if a["read"] == read]
 
-    return results[offset:offset + limit]
+    return results[offset : offset + limit]
+
 
 @router.get("/{alert_id}", response_model=AlertResponse)
 async def get_alert(alert_id: str):
@@ -73,11 +75,11 @@ async def get_alert(alert_id: str):
 
     if not alert:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Alert not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Alert not found"
         )
 
     return alert
+
 
 @router.patch("/{alert_id}", response_model=AlertResponse)
 async def update_alert(alert_id: str, update: AlertUpdate):
@@ -86,14 +88,14 @@ async def update_alert(alert_id: str, update: AlertUpdate):
 
     if not alert:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Alert not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Alert not found"
         )
 
     alert["read"] = update.read
     logger.info(f"Alert {alert_id} marked as {'read' if update.read else 'unread'}")
 
     return alert
+
 
 @router.post("/", response_model=AlertResponse)
 async def create_alert(alert: AlertCreate):
@@ -102,7 +104,7 @@ async def create_alert(alert: AlertCreate):
         "id": str(len(ALERTS_DATA) + 1),
         **alert.model_dump(),
         "timestamp": datetime.now(),
-        "read": False
+        "read": False,
     }
 
     ALERTS_DATA.append(new_alert)
@@ -110,8 +112,15 @@ async def create_alert(alert: AlertCreate):
 
     return new_alert
 
+
 @router.get("/severity/critical")
 async def get_critical_alerts(account_id: str = Query(...)):
     """Get critical severity alerts for emergency response"""
-    alerts = [a for a in ALERTS_DATA if a["severity"] == "critical" and a["account_id"] == account_id and not a["read"]]
+    alerts = [
+        a
+        for a in ALERTS_DATA
+        if a["severity"] == "critical"
+        and a["account_id"] == account_id
+        and not a["read"]
+    ]
     return alerts

@@ -3,8 +3,11 @@ from pydantic import ConfigDict
 from typing import List
 import os
 
+
 class Settings(BaseSettings):
-    model_config = ConfigDict(env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore")
+    model_config = ConfigDict(
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore"
+    )
 
     # App
     APP_NAME: str = "MSP Assistant"
@@ -14,7 +17,9 @@ class Settings(BaseSettings):
     PORT: int = 8000
 
     # CORS - parse from comma-separated string
-    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001,http://192.168.1.43:3000"
+    CORS_ORIGINS: str = (
+        "http://localhost:3000,http://localhost:3001,http://192.168.1.43:3000"
+    )
 
     # JWT
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
@@ -46,8 +51,7 @@ class Settings(BaseSettings):
 
     # Database
     DATABASE_URL: str = os.getenv(
-        "DATABASE_URL",
-        "postgresql://user:password@localhost/msp_assistant"
+        "DATABASE_URL", "postgresql://user:password@localhost/msp_assistant"
     )
 
     # Email (for alerts)

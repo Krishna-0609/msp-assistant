@@ -5,10 +5,12 @@ import enum
 
 Base = declarative_base()
 
+
 class UserRole(str, enum.Enum):
     ADMIN = "admin"
     ANALYST = "analyst"
     VIEWER = "viewer"
+
 
 class User(Base):
     __tablename__ = "users"

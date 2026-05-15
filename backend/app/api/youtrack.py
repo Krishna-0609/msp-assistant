@@ -9,6 +9,7 @@ from app.services.youtrack_service import YouTrackService
 router = APIRouter(prefix="/api/youtrack", tags=["youtrack"])
 youtrack_service = None
 
+
 def get_youtrack_service():
     global youtrack_service
     if youtrack_service is None:
