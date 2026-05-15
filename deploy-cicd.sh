@@ -111,7 +111,7 @@ check_prerequisites() {
     fi
 
     if [ ${#missing[@]} -gt 0 ]; then
-        write_status "Missing prerequisites: ${missing[*]}" "ERROR"
+        write_status "Missing prerequisites: ${missing[*]}" "ERROR "
         write_status "Please install missing tools and try again" "ERROR"
         exit 1
     fi
