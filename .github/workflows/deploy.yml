@@ -119,10 +119,15 @@ jobs:
           terraform fmt -check -recursive
         continue-on-error: true
 
-      - name: Terraform Init
+      - name: Terraform Init (Local State)
         run: |
           cd deployment/terraform
-          terraform init -upgrade
+          # Use local state for GitHub Actions (account mismatch with S3 backend)
+          terraform init -upgrade -backend=false
+
+          # Create local state directory
+          mkdir -p .terraform
+          touch terraform.tfstate
 
       - name: Terraform Plan
         run: |
